@@ -21,7 +21,7 @@ fi
 
 cd /home/docker/actions-runner
 
-./config.sh --url $GITHUB_URL --token ${REG_TOKEN} --agent $GITHUB_RUNNER_NAME --work $GITHUB_RUNNER_WORKDIR --unattended
+./config.sh --url $GITHUB_URL --token ${REG_TOKEN} --name $GITHUB_RUNNER_NAME --work $GITHUB_RUNNER_WORKDIR --unattended
 
 cleanup() {
     echo "Removing runner..."
