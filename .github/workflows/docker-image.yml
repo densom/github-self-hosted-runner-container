@@ -32,7 +32,8 @@ jobs:
       id: meta
       uses: docker/metadata-action@v4
       with:
-        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+#         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: densom/github-self-hosted-runner
     
     - name: Build and push
       uses: docker/build-push-action@v3
