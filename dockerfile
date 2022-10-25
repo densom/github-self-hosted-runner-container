@@ -19,7 +19,9 @@ RUN apt-get update -y && apt-get upgrade -y && useradd -m docker \
     && cd /home/docker && mkdir actions-runner && cd actions-runner \
     && curl -O -L https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz \
     && tar xzf ./actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz \
-    && chown -R docker ~docker && /home/docker/actions-runner/bin/installdependencies.sh
+    && chown -R docker ~docker && /home/docker/actions-runner/bin/installdependencies.sh \
+    && rm -rf /var/lib/apt/lists/*
+
 
 # copy over the start.sh script
 COPY start.sh start.sh
