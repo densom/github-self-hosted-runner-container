@@ -1,0 +1,44 @@
+name: Docker Image CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'develop-versioning'
+    tags:
+      - 't*'
+  pull_request:
+    branches:
+      - 'develop-versioning'
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      
+    - name: Login to Docker Hub
+      if: github.event_name != 'pull_request'
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+#         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: densom/github-self-hosted-runner
+    
+    # - name: Build and push
+    #   uses: docker/build-push-action@v3
+    #   with:
+    #     context: .
+    #     push: ${{ github.event_name != 'pull_request' }}
+    #     tags: ${{ steps.meta.outputs.tags }}
+    #     labels: ${{ steps.meta.outputs.labels }}
