@@ -4,12 +4,12 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - 'develop-versioning'
+      - 'develop-image-versioning'
     tags:
       - 't*'
   pull_request:
     branches:
-      - 'develop-versioning'
+      - 'develop-image-versioning'
 
 jobs:
 
@@ -27,14 +27,19 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-        
+
+    - name: output info
+      run: |
+        - echo "env.IMAGE_NAME = ${{env.IMAGE_NAME}}"
+        - echo "env.REGISTRY = ${{env.REGISTRY}}"
+
     - name: Extract metadata (tags, labels) for Docker
       id: meta
       uses: docker/metadata-action@v4
       with:
 #         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           images: densom/github-self-hosted-runner
-    
+        
     # - name: Build and push
     #   uses: docker/build-push-action@v3
     #   with:
