@@ -2,12 +2,9 @@ name: Testing imaging - docker-image-versioning
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - 'develop-image-versioning'
-    tags:
-      - 't*'
   pull_request:
+    types:
+      - closed
     branches:
       - 'develop-image-versioning'
 
@@ -18,8 +15,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Set runner version
+      id: runner-version
+      uses: juliangruber/read-file-action@v1
+      with:
+        path: ./.github-runner-version
+
     - name: Checkout repository
       uses: actions/checkout@v3
+      with:
+        fetch-depth: '0'
       
     - name: Login to Docker Hub
       if: github.event_name != 'pull_request'
@@ -28,10 +33,11 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: output info
-      run: |
-        - echo "env.IMAGE_NAME = ${{env.IMAGE_NAME}}"
-        - echo "env.REGISTRY = ${{env.REGISTRY}}"
+    - name: Bump version and push tag
+      uses: anothrNick/github-tag-action@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        WITH_V: true
 
     - name: Extract metadata (tags, labels) for Docker
       id: meta
@@ -47,3 +53,5 @@ jobs:
     #     push: ${{ github.event_name != 'pull_request' }}
     #     tags: ${{ steps.meta.outputs.tags }}
     #     labels: ${{ steps.meta.outputs.labels }}
+    #     build-args: |
+    #       - RUNNER_VERSION: ${{ steps.package.outputs.content }}
