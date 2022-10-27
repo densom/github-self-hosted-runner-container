@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Testing imaging - docker-imae-versioning
 
 on:
   workflow_dispatch:
